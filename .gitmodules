@@ -1,0 +1,3 @@
+[submodule "lib/mongo-solr"]
+	path = lib/mongo-solr
+	url = git://github.com/renctan/mongo-solr.git
