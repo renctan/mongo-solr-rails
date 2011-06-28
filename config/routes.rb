@@ -1,7 +1,7 @@
 MongoSolrRails::Application.routes.draw do
   root :to => "mongo_connections#new"
 
-  resources :mongo_connections, only => [:new, :create, :edit]
+  resources :mongo_connections, :only => [:new, :create, :edit]
   resources :solr do
     resources :databases, :only => [:create, :edit, :index]
 

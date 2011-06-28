@@ -7,6 +7,10 @@ class MongoConnection
   attr_reader :conn
   attr_reader :mode
 
+  def initialize
+    @conn = nil
+  end
+
   # Setup the MongoDB connection.
   #
   # @param location [String] The location of the MongoDB server.

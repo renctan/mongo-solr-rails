@@ -1,7 +1,17 @@
 source 'http://rubygems.org'
+source 'http://gemcutter.org'
+
+require "rubygems"
 
 gem 'rails', '3.0.9'
 gem "decent_exposure"
+gem "haml"
+gem "sass"
+gem "rsolr"
+gem "mongo"
+gem "shoulda"
+gem "mocha"
+gem "hamster"
 
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'

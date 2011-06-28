@@ -1,0 +1,13 @@
+%h1 MongoDB Connection
+
+= render :partial => "partials/error", :locals => { :errors => err_msg }
+
+-if connection.conn.nil? then
+  = form_for(:conn, :url => { :controller => "mongo_connections",
+                              :action => "create" }) do |f|
+    = f.label :location, "location"
+    = f.text_field :location
+    = f.label :port, "port number"
+    = f.text_field :port
+    = f.submit "connect"
+
