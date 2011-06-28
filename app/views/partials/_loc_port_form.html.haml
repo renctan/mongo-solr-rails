@@ -1,0 +1,14 @@
+-# Partial for showing errors in forms.
+-#
+-# params:
+-#  controller [String] The name of the controller to forward to
+-#  action [String] The name of the REST action for the PUT request
+
+= form_for(:conn, :url => { :controller => controller,
+                            :action => action }) do |f|
+  = f.label :location, "location"
+  = f.text_field :location
+  = f.label :port, "port number"
+  = f.text_field :port
+  = f.submit "connect"
+

@@ -1,13 +1,16 @@
-%h1 New MongoDB Connection
+%h1 New Solr Connection
 
 = render :partial => "partials/error", :locals => { :errors => err_msg }
 
-= form_for(:conn, :url => { :controller => "mongo_connections",
+= form_for(:conn, :url => { :controller => "solrs",
                             :action => "create" }) do |f|
+  = f.label :location, "name"
+  = f.text_field :name
   = f.label :location, "location"
   = f.text_field :location
-  = f.label :port, "port number"
-  = f.text_field :port
   = f.submit "connect"
 
+%br/
+
+= link_to("Solr List", solrs_path)
 

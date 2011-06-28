@@ -1,18 +1,29 @@
+require "mongo-solr/src/synchronized_hash"
+require "mongo-solr/src/solr_synchronizer"
+
 class Solr
+  extend ActiveModel::Naming
+
   attr_reader :name
   attr_reader :db_set
 
   # @param name [String] A label for this Solr connection
   # @param location [String] The location of the Solr server
-  def initialize(name, location)
+  # @param mongo [Mongo::Connection] The connection to the mongo database
+  # @param mode [Symbol] @see MongoSolr::SolrSynchronizer
+  #
+  # @raise [RuntimeError] whenever the connection to Solr fails
+  def initialize(name, location, mongo, mode)
     @name = name
+    @solr = RSolr.connect(:url => location)
+    # Try to check if we can connect to the Solr Server
+    @solr.get "select", :params =>{ :q => PING_TEST_STRING }
+
     @db_name_set = MongoSolr::SynchronizedHash.new
     @db_set = MongoSolr::SynchronizedHash.new
 
-    @solr = RSolr.connect(:url => location)
-    mongo = MongoConnection.instance
-    @conn = mongo.conn
-    @synchronizer = MongoSolr::SolrSynchronizer(@solr, @conn, mongo.mode, @db_name_set)
+    @conn = mongo
+    @synchronizer = MongoSolr::SolrSynchronizer.new(@solr, @conn, mode, @db_name_set)
     @sync_thread = nil
   end
 
@@ -44,5 +55,12 @@ class Solr
   def remove(database_name)
     @db_set.remove(database_name)
   end
+
+  def to_param
+    @name
+  end
+
+  private
+  PING_TEST_STRING = "Checking connection from mongo-solr-rails... hope nothing comes out"
 end
 

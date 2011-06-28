@@ -2,21 +2,21 @@ class MongoConnectionsController < ActionController::Base
   expose(:connection) { MongoConnection.instance }
   expose(:err_msg) { [] }
 
+  def new
+    redirect_to solrs_path unless connection.conn.nil?
+  end
+
   def create
     conn_details = params["conn"]
     loc = conn_details["location"]
     port = conn_details["port"].to_i
 
-    respond_to do |format|
-      begin
-        connection.setup(loc, port)
+    err_msg.concat(connection.setup(loc, port))
 
-        # TODO: route to Solr
-#        format.html { redirect_to :action => "index" }
-      rescue Mongo::ConnectionFailure
-        err_msg << "Cannot connect to #{loc}:#{port}"
-        format.html { render :action => "new" }
-      end
+    if err_msg.empty? then
+      redirect_to solrs_path
+    else
+      render :action => "new"
     end
   end
 end

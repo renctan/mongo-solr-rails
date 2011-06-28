@@ -17,10 +17,20 @@ class MongoConnection
   # @param port [Integer] The port number of the MongoDB server.
   # @param mode [Symbol] (:auto) @see MongoSolr::SolrSynchronizer#new
   #
-  # @raise [Mongo::ConnectionFailure]
+  # @return [Array<String>] an array of error messages. Empty if no error occured.
   def setup(location, port, mode = :auto)
-    @conn = Mongo::Connection.new(location, port)
-    @mode = mode
+    err_msg = []
+    location.strip!
+
+    begin
+      @conn = Mongo::Connection.new(location, port)
+      @mode = mode
+    rescue Mongo::ConnectionFailure
+      @conn = nil
+      err_msg << "Cannot connect to #{location}:#{port}"
+    end
+
+    return err_msg
   end
 end
 

@@ -1,0 +1,17 @@
+-# Must find out why layout/application.html.erb doesn't load
+= javascript_include_tag :all
+
+%h1 Solr Connections
+
+%table
+  %tr
+    %th Name
+  -solrs.each do |name, solr|
+    %tr
+      %td= link_to(name, edit_solr_path(solr))
+      %td= link_to("remove", solr, :method => :delete)
+
+%br/
+
+= link_to "Add new", new_solr_path
+
