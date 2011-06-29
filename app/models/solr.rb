@@ -1,25 +1,33 @@
 require "mongo-solr/src/synchronized_hash"
 require "mongo-solr/src/solr_synchronizer"
 
+# A model for representing a Solr connection.
 class Solr
   extend ActiveModel::Naming
 
   attr_reader :name
+
+  # [SynchronizedHash] Contains the names of collections to index. Should only be used
+  # for reading.
+  attr_reader :db_name_set
+
+  # [SynchronizedHash] Contains Database model instances. Should only be used for reading.
   attr_reader :db_set
 
   # @param name [String] A label for this Solr connection
   # @param location [String] The location of the Solr server
   # @param mongo [Mongo::Connection] The connection to the mongo database
-  # @param mode [Symbol] @see MongoSolr::SolrSynchronizer
+  # @param mode [Symbol] @see MongoSolr::SolrSynchronizer#new
+  # @param db_name_set [SynchronizedHash] @see MongoSolr::SolrSynchronizer#new
   #
   # @raise [RuntimeError] whenever the connection to Solr fails
-  def initialize(name, location, mongo, mode)
+  def initialize(name, location, mongo, mode, db_name_set)
     @name = name
     @solr = RSolr.connect(:url => location)
     # Try to check if we can connect to the Solr Server
     @solr.get "select", :params =>{ :q => PING_TEST_STRING }
 
-    @db_name_set = MongoSolr::SynchronizedHash.new
+    @db_name_set = db_name_set || MongoSolr::SynchronizedHash.new
     @db_set = MongoSolr::SynchronizedHash.new
 
     @conn = mongo
@@ -27,7 +35,7 @@ class Solr
     @sync_thread = nil
   end
 
-  # Synchronize database to Solr
+  # Synchronizes database to Solr.
   #
   # @raise [RuntimeError] when sync is already running
   def sync
@@ -38,22 +46,27 @@ class Solr
     end
   end
 
-  # Stop synchronization
+  # Stops the synchronization
   def stop_sync
     @synchronizer.stop!
     @sync_thread.join unless @sync_thread.nil?
     @sync_thread = nil
   end
 
-  # @param database_name [String] Name of the database instance to monitor.
-  def add(database_name)
-    db = MongoConnection.instance.conn.db(database_name)
-    @db_set[database_name] = Database.new(db, @db_name_set)
+  # Add a database to index to Solr.
+  #
+  # @param database [Database] The database model instance to monitor.
+  def add(database)
+    db_name = database.name
+    db = MongoConnection.instance.conn.db(db_name)
+    @db_set[db_name] = database
+    @db_name_set[db_name] = MongoSolr::SynchronizedSet.new
   end
 
   # @param database_name [String] 
   def remove(database_name)
-    @db_set.remove(database_name)
+    @db_name_set.delete(database_name)
+    @db_set.delete(database_name)
   end
 
   def to_param

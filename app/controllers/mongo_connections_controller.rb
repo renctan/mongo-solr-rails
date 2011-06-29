@@ -1,4 +1,4 @@
-class MongoConnectionsController < ActionController::Base
+class MongoConnectionsController < ApplicationController
   expose(:connection) { MongoConnection.instance }
   expose(:err_msg) { [] }
 

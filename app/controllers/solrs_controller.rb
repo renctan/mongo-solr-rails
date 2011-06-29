@@ -1,4 +1,6 @@
-class SolrsController < ActionController::Base
+require "mongo-solr/src/synchronized_set"
+
+class SolrsController < ApplicationController
   expose(:solrs) { SolrList.instance }
   expose(:err_msg) { [] }
   expose(:solr) do
@@ -12,7 +14,9 @@ class SolrsController < ActionController::Base
     location = conn_details["location"]
 
     mongo = MongoConnection.instance
-    err_msg.concat(solrs.add(name, location, mongo.conn, mongo.mode))
+    db_set = MongoSolr::SynchronizedSet.new
+
+    err_msg.concat(solrs.add(name, location, mongo.conn, mongo.mode, db_set))
 
     if err_msg.empty? then
       render :action => "edit"
