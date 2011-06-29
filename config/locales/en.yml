@@ -1,5 +1,39 @@
-# Sample localization file for English. Add more files in this directory for other locales.
-# See http://github.com/svenfuchs/rails-i18n/tree/master/rails%2Flocale for starting points.
-
 en:
-  hello: "Hello world"
+  models:
+    mongo_connection:
+      conn_err: "Cannot connect to %s:%d"
+    solr_list:
+      conn_err: "Error encountered while trying to setup connection to %s"
+      name_exists_err: "Solr connection with name the %s already exists. Please choose another name."
+
+  views:
+    mongo_connections:
+      new:
+        header: "New MongoDB Connection"
+        location: "location"
+        port: "port number"
+        mode: "mode"
+        auto: "auto"
+        repl_set: "replica set"
+        master_slave: "master/slave"
+        connect: "connect"
+
+    partials:
+      error:
+        header: "Error"
+
+    solrs:
+      common:
+        index_link: "Solr List"
+      edit:
+        header: "Solr Edit Page"
+      index:
+        header: "Solr Connections"
+        remove: "remove"
+        add_new: "Add new"
+      new:
+        header: "New Solr Connection"
+        name: "name"
+        location: "location"
+        connect: "connect"
+

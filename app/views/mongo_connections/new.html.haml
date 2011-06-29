@@ -1,18 +1,19 @@
-%h1 New MongoDB Connection
+-local_prefix = "views.mongo_connections.new"
+%h1= t("#{local_prefix}.header")
 
 = render :partial => "partials/error", :locals => { :errors => err_msg }
 
 = form_for(:conn, :url => { :controller => "mongo_connections",
                             :action => "create" }) do |f|
-  = f.label :location, "location"
+  = f.label :location, t("#{local_prefix}.location")
   = f.text_field :location
-  = f.label :port, "port number"
+  = f.label :port, t("#{local_prefix}.port")
   = f.text_field :port
-  = f.label :mode, "mode"
+  = f.label :mode, t("#{local_prefix}.mode")
   = select("conn", "mode",
-            [["auto", "auto"],
-            ["replica set", "repl_set"],
-            ["master/slave", "master_slave"]])
+            [[t("#{local_prefix}.auto"), "auto"],
+            [t("#{local_prefix}.repl_set"), "repl_set"],
+            [t("#{local_prefix}.master_slave"), "master_slave"]])
 
-  = f.submit "connect"
+  = f.submit(t("#{local_prefix}.connect"))
 

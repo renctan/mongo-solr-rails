@@ -1,16 +1,17 @@
-%h1 New Solr Connection
+-local_prefix = "views.solrs.new"
+%h1= t("#{local_prefix}.header")
 
 = render :partial => "partials/error", :locals => { :errors => err_msg }
 
 = form_for(:conn, :url => { :controller => "solrs",
                             :action => "create" }) do |f|
-  = f.label :location, "name"
+  = f.label :name, t("#{local_prefix}.name")
   = f.text_field :name
-  = f.label :location, "location"
+  = f.label :location, t("#{local_prefix}.location")
   = f.text_field :location
-  = f.submit "connect"
+  = f.submit t("#{local_prefix}.connect")
 
 %br/
 
-= link_to("Solr List", solrs_path)
+= link_to(t("views.solrs.common.index_link"), solrs_path)
 

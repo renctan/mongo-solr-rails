@@ -27,10 +27,14 @@ class MongoConnection
       @mode = mode
     rescue Mongo::ConnectionFailure
       @conn = nil
-      err_msg << "Cannot connect to #{location}:#{port}"
+      new_msg = I18n.t("#{LOCAL_PREFIX}.conn_err") % [location, port]
+      err_msg << new_msg
     end
 
     return err_msg
   end
+
+  private
+  LOCAL_PREFIX = "models.mongo_connection"
 end
 

@@ -6,7 +6,7 @@
 
 - unless errors.empty? then
   .form_error_message
-    .header=h "Error"
+    .header=h t("views.partials.error.header")
     %ul
     - errors.each do |msg|
       %li=h msg

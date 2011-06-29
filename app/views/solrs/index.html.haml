@@ -1,4 +1,5 @@
-%h1 Solr Connections
+-local_prefix = "views.solrs.index"
+%h1= t("#{local_prefix}.header")
 
 %table
   %tr
@@ -6,9 +7,9 @@
   -solrs.each do |name, solr|
     %tr
       %td= link_to(name, edit_solr_path(solr))
-      %td= link_to("remove", solr, :method => :delete)
+      %td= link_to(t("#{local_prefix}.remove"), solr, :method => :delete)
 
 %br/
 
-= link_to "Add new", new_solr_path
+= link_to(t("#{local_prefix}.add_new"), new_solr_path)
 

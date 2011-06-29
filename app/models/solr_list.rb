@@ -28,13 +28,14 @@ class SolrList
     begin
       solr = Solr.new(name, location, mongo, mode, db_set)
     rescue
-      err_msg << "Error encountered while trying to setup connection to #{location}"
+      new_msg = I18n.t("#{LOCAL_PREFIX}.conn_err") % location
+      err_msg << new_msg
     end
 
     @list.use do |list|
       if list.has_key? name then
-        err_msg << "Solr connection with name the #{name} already exists." +
-          " Please choose another name."
+        new_msg = I18n.t("#{LOCAL_PREFIX}.name_exists_err") % name
+        err_msg << new_msg
       else
         list[name] = solr unless solr.nil?
       end
@@ -42,5 +43,8 @@ class SolrList
 
     return err_msg
   end
+
+  private
+  LOCAL_PREFIX = "models.solr_list"
 end
 
