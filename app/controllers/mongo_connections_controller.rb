@@ -10,8 +10,9 @@ class MongoConnectionsController < ApplicationController
     conn_details = params["conn"]
     loc = conn_details["location"]
     port = conn_details["port"].to_i
+    mode = conn_details["mode"].to_sym
 
-    err_msg.concat(connection.setup(loc, port))
+    err_msg.concat(connection.setup(loc, port, mode))
 
     if err_msg.empty? then
       redirect_to solrs_path

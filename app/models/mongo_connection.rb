@@ -15,10 +15,10 @@ class MongoConnection
   #
   # @param location [String] The location of the MongoDB server.
   # @param port [Integer] The port number of the MongoDB server.
-  # @param mode [Symbol] (:auto) @see MongoSolr::SolrSynchronizer#new
+  # @param mode [Symbol] @see MongoSolr::SolrSynchronizer#new
   #
   # @return [Array<String>] an array of error messages. Empty if no error occured.
-  def setup(location, port, mode = :auto)
+  def setup(location, port, mode)
     err_msg = []
     location.strip!
 
