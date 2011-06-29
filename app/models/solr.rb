@@ -32,6 +32,10 @@ class Solr
 
     @conn = mongo
     @synchronizer = MongoSolr::SolrSynchronizer.new(@solr, @conn, mode, @db_name_set)
+
+    @sync_thread_mutex = Mutex.new
+
+    # Protected by @sync_thread_mutex
     @sync_thread = nil
   end
 
@@ -39,18 +43,24 @@ class Solr
   #
   # @raise [RuntimeError] when sync is already running
   def sync
-    if @sync_thread.nil? then
-      @sync_thread = Thread.new { @synchronizer.sync() }
-    else
-      raise "sync_thread for #{@name} already running!"
+    @sync_thread_mutex.synchronize do
+      if @sync_thread.nil? then
+        @sync_thread = Thread.new { @synchronizer.sync() }
+      else
+        raise "sync_thread for #{@name} already running!"
+      end
     end
   end
 
   # Stops the synchronization
   def stop_sync
-    @synchronizer.stop!
-    @sync_thread.join unless @sync_thread.nil?
-    @sync_thread = nil
+    @sync_thread_mutex.synchronize do
+      unless @sync_thread.nil? then
+        @synchronizer.stop!
+        @sync_thread.join
+        @sync_thread = nil
+      end
+    end
   end
 
   # Add a database to index to Solr.

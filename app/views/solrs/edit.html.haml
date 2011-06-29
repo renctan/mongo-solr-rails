@@ -1,5 +1,11 @@
 %h1 Solr Edit Page
 
+- databases.each do |db_name, coll_set|
+  .db_entry
+    =h db_name
+    - coll_set.each do |coll_name|
+      .coll_entry=h coll_name
+
 %br/
 
 = link_to("Solr List", solrs_path)
