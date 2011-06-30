@@ -1,9 +1,10 @@
 en:
   models:
     mongo_connection:
-      conn_err: "Cannot connect to %s:%d"
+      conn_err: "Cannot connect to %s:%d."
+      auth_err: "Failed to authenticate to %s with %s."
     solr_list:
-      conn_err: "Error encountered while trying to setup connection to %s"
+      conn_err: "Error encountered while trying to setup connection to %s."
       name_exists_err: "Solr connection with name the %s already exists. Please choose another name."
 
   views:
@@ -27,6 +28,12 @@ en:
         index_link: "Solr List"
       edit:
         header: "Solr Edit Page"
+        db_empty_tip: "Cannot see your databases? You may need to login using the form below if the database is password protected."
+        login_info_msg: "Login to a database. Note: Logging-in to the admin database will enable you to access all the other databases."
+        database: "database name"
+        username: "username"
+        pwd: "password"
+        login: "login"
       index:
         header: "Solr Connections"
         remove: "remove"

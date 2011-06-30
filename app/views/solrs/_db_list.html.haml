@@ -1,0 +1,8 @@
+-# Partial for showing the list of collections.
+
+- get_db_list.each do |db_name, coll_set|
+  .db_entry{ :id => ["db_entry", db_name] }
+    =h db_name
+    - coll_set.each do |coll_name|
+      .coll_entry{ :id => ["coll_entry", coll_name] }=h coll_name
+

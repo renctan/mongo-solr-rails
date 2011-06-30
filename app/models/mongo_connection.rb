@@ -4,11 +4,13 @@ require "singleton"
 class MongoConnection
   include Singleton
 
-  attr_reader :conn
-  attr_reader :mode
+  attr_reader :conn, :mode
+  # [Array<String>] List of db names currently logged in.
+  attr_reader :db_logged_in
 
   def initialize
     @conn = nil
+    @db_logged_in = []
   end
 
   # Setup the MongoDB connection.
@@ -29,6 +31,22 @@ class MongoConnection
       @conn = nil
       new_msg = I18n.t("#{LOCAL_PREFIX}.conn_err") % [location, port]
       err_msg << new_msg
+    end
+
+    return err_msg
+  end
+
+  def authenticate(db_name, user, pwd)
+    err_msg = []
+
+    begin
+      @conn.db(db_name).authenticate(user, pwd)
+      @db_logged_in << db_name
+    rescue Mongo::AuthenticationError
+      new_msg = I18n.t("#{LOCAL_PREFIX}.auth_err") % [db_name, user]
+      err_msg << new_msg
+    rescue => e
+      err_msg << e.message
     end
 
     return err_msg

@@ -1,11 +1,23 @@
 -local_prefix = "views.solrs.edit"
 %h1= t("#{local_prefix}.header")
 
-- databases.each do |db_name, coll_set|
-  .db_entry
-    =h db_name
-    - coll_set.each do |coll_name|
-      .coll_entry=h coll_name
+.tip
+  =h t("#{local_prefix}.db_empty_tip")
+
+#login_form
+  =h t("#{local_prefix}.login_info_msg")
+  #login_err_msg
+  = form_for(:auth, :url => { :action => "auth_db" }, :remote => true) do |f|
+    = f.label :database, t("#{local_prefix}.database")
+    = f.text_field :database
+    = f.label :username, t("#{local_prefix}.username")
+    = f.text_field :username
+    = f.label :password, t("#{local_prefix}.pwd")
+    = f.password_field :password
+    = f.submit(t("#{local_prefix}.login"))
+
+#database_list
+  = render :partial => "db_list"
 
 %br/
 

@@ -1,0 +1,3 @@
+$("#login_err_msg").empty().
+  prepend("<%= escape_javascript render(:partial => 'partials/error',
+                                        :locals => { :errors => err_msg }) %>");

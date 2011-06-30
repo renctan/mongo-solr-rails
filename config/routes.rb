@@ -2,6 +2,7 @@ MongoSolrRails::Application.routes.draw do
   root :to => "mongo_connections#new"
 
   resources :mongo_connections, :only => [:new, :create, :edit]
+
   resources :solrs do
     resources :databases, :only => [:create, :edit, :index, :destroy]
 
@@ -9,6 +10,10 @@ MongoSolrRails::Application.routes.draw do
       match "add" => :add
       match "remove" => :remove
     end
+  end
+
+  controller :solrs do
+    match "auth_db" => :auth_db
   end
 
   # The priority is based upon order of creation:
