@@ -8,8 +8,6 @@ class SolrsController < ApplicationController
     SolrList.instance[name] unless name.nil?
   end
 
-  helper_method :get_db_list
-
   def create
     conn_details = params["conn"]
     name = conn_details["name"]
@@ -35,7 +33,7 @@ class SolrsController < ApplicationController
   end
 
   def update
-    extract_db_set(params)
+    solr.update_attributes(params)
     render :action => "edit"
   end
 
@@ -52,56 +50,6 @@ class SolrsController < ApplicationController
     unless err_msg.empty? then
       render "auth_err.js.erb"
     end
-  end
-
-  ##############################################################################
-  private
-  SPECIAL_PURPOSE_MONGO_DB_NAME_PATTERN = /^(local|admin|config)$/
-  SPECIAL_COLLECTION_NAME_PATTERN = /^system\./
-
-  # @return [Hash<String, Array<String> >] a hash containing known databases. The key
-  #   contains the database name while the value contains an array of collection names.
-  def get_db_list
-    mongo = MongoConnection.instance
-    conn = mongo.conn
-    
-    begin
-      db_list = {}
-      conn.database_names.each do |db_name|
-        unless db_name =~ SPECIAL_PURPOSE_MONGO_DB_NAME_PATTERN then
-          db_list[db_name] = conn.db(db_name).collection_names.reject do |coll_name|
-            coll_name =~ SPECIAL_COLLECTION_NAME_PATTERN
-          end
-        end
-      end
-    rescue Mongo::OperationFailure
-      # Authentication failure. Show the dbs that we have logged on so far.
-      mongo.db_logged_in.each do |db_name|
-        db_list[db_name] = conn.db(db_name).collection_names.reject do |coll_name|
-          coll_name =~ SPECIAL_COLLECTION_NAME_PATTERN
-        end
-      end
-    end
-
-    db_list
-  end
-
-  # Extract the list of db from the update request parameters.
-  #
-  # @param params [Hash] The request parameter to read from.
-  #
-  # @return [Hash<Set<String> >]
-  def extract_db_set(params)
-    db_set = {}
-
-    params.each do |key, value|
-      if key.start_with? "db_" then
-        db_name = key.sub(/^db_/, "")
-        db_set[db_name] = Set.new(value.reject(){ |k, v| v == "0" }.keys)
-      end
-    end
-
-    return db_set
   end
 end
 

@@ -88,7 +88,29 @@ class Solr
     false # Instances exist only in RAM
   end
 
+  def update_attributes(param)
+    new_db_set = extract_db_set(param)
+  end
+
   private
   PING_TEST_STRING = "Checking connection from mongo-solr-rails... hope nothing comes out"
+
+  # Extract the list of db from the update request parameters.
+  #
+  # @param params [Hash] The request parameter to read from.
+  #
+  # @return [Hash<Set<String> >]
+  def extract_db_set(params)
+    db_set = {}
+
+    params.each do |key, value|
+      if key.start_with? "db_" then
+        db_name = key.sub(/^db_/, "")
+        db_set[db_name] = Set.new(value.reject(){ |k, v| v == "0" }.keys)
+      end
+    end
+
+    return db_set
+  end
 end
 
