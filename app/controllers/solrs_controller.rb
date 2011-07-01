@@ -4,7 +4,7 @@ class SolrsController < ApplicationController
   expose(:solrs) { SolrList.instance }
   expose(:err_msg) { [] }
   expose(:solr) do
-    name = params["solr_id"]
+    name = params["id"]
     SolrList.instance[name] unless name.nil?
   end
 
@@ -21,7 +21,7 @@ class SolrsController < ApplicationController
     err_msg.concat(solrs.add(name, location, mongo.conn, mongo.mode, db_set))
 
     if err_msg.empty? then
-      render :action => "edit"
+      redirect_to edit_solr_path(name)
     else
       render :action => "new"
     end
@@ -35,6 +35,8 @@ class SolrsController < ApplicationController
   end
 
   def update
+    extract_db_set(params)
+    render :action => "edit"
   end
 
   # ajax only
@@ -82,6 +84,24 @@ class SolrsController < ApplicationController
     end
 
     db_list
+  end
+
+  # Extract the list of db from the update request parameters.
+  #
+  # @param params [Hash] The request parameter to read from.
+  #
+  # @return [Hash<Set<String> >]
+  def extract_db_set(params)
+    db_set = {}
+
+    params.each do |key, value|
+      if key.start_with? "db_" then
+        db_name = key.sub(/^db_/, "")
+        db_set[db_name] = Set.new(value.reject(){ |k, v| v == "0" }.keys)
+      end
+    end
+
+    return db_set
   end
 end
 

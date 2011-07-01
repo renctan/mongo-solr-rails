@@ -34,6 +34,7 @@ en:
         username: "username"
         pwd: "password"
         login: "login"
+        select: "select"
       index:
         header: "Solr Connections"
         remove: "remove"

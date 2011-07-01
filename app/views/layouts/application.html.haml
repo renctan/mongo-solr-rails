@@ -4,8 +4,10 @@
     %title MongoSolrRails
     = stylesheet_link_tag :all
     -# Must make jquery.min load first before rails
-    = javascript_include_tag "jquery.min", "rails", "application"
+    = javascript_include_tag "jquery.min", "jquery-ui-1.8.14.custom.min",
+        "jquery.checkboxtree.min", "rails", "application"
     = csrf_meta_tag
+    = yield :head
 
   %body
     = yield

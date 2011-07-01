@@ -3,8 +3,7 @@
 
 = render :partial => "partials/error", :locals => { :errors => err_msg }
 
-= form_for(:conn, :url => { :controller => "mongo_connections",
-                            :action => "create" }) do |f|
+= form_for(:conn, :url => { :action => "create" }) do |f|
   = f.label :location, t("#{local_prefix}.location")
   = f.text_field :location
   = f.label :port, t("#{local_prefix}.port")

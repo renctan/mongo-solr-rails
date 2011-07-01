@@ -2,15 +2,7 @@ MongoSolrRails::Application.routes.draw do
   root :to => "mongo_connections#new"
 
   resources :mongo_connections, :only => [:new, :create, :edit]
-
-  resources :solrs do
-    resources :databases, :only => [:create, :edit, :index, :destroy]
-
-    controller :databases do
-      match "add" => :add
-      match "remove" => :remove
-    end
-  end
+  resources :solrs
 
   controller :solrs do
     match "auth_db" => :auth_db

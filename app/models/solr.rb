@@ -4,6 +4,7 @@ require "mongo-solr/src/solr_synchronizer"
 # A model for representing a Solr connection.
 class Solr
   extend ActiveModel::Naming
+  include ActiveModel::Conversion
 
   attr_reader :name
 
@@ -81,6 +82,10 @@ class Solr
 
   def to_param
     @name
+  end
+
+  def persisted?
+    false # Instances exist only in RAM
   end
 
   private

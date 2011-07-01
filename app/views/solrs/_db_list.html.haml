@@ -1,8 +1,17 @@
--# Partial for showing the list of collections.
+-# Partial for database collection selection checkboxes.
+-#
+-# Params
+-#  f [ActionView::Helpers::FormBuilder] A form object instance
 
-- get_db_list.each do |db_name, coll_set|
-  .db_entry{ :id => ["db_entry", db_name] }
-    =h db_name
-    - coll_set.each do |coll_name|
-      .coll_entry{ :id => ["coll_entry", coll_name] }=h coll_name
+%ul#db_checkbox_tree
+  - get_db_list.each do |db_name, coll_set|
+    %li.db_entry
+      - db_db_name = "db_" + db_name
+      = check_box_tag("databases", db_name)
+      = f.label :db_name, db_name
+      %ul
+        - coll_set.each do |coll_name|
+          %li.coll_entry
+            = check_box(db_db_name, coll_name)
+            = f.label :coll_name, coll_name
 
