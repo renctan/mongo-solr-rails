@@ -21,7 +21,7 @@
 #database_list
   = form_for(:solr, :url => { :action => "update" },
               :html => { :method => "put" }) do |f|
-    = render :partial => "db_list", :locals => { :f => f }
+    = render :partial => "db_list"
     = f.submit(t("#{local_prefix}.select"))
 
 %br/
