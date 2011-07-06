@@ -1,10 +1,8 @@
-require "mongo-solr/src/synchronized_set"
-
 class SolrsController < ApplicationController
   expose(:solrs) { SolrList.instance }
   expose(:err_msg) { [] }
   expose(:solr) do
-    name = params["id"]
+    name = params["id"] || params["solr_id"]
     SolrList.instance[name] unless name.nil?
   end
 
@@ -14,9 +12,7 @@ class SolrsController < ApplicationController
     location = conn_details["location"]
 
     mongo = MongoConnection.instance
-    db_set = MongoSolr::SynchronizedSet.new
-
-    err_msg.concat(solrs.add(name, location, mongo.conn, mongo.mode, db_set))
+    err_msg.concat(solrs.add(name, location, mongo.conn, mongo.mode, {}))
 
     if err_msg.empty? then
       redirect_to edit_solr_path(name)
@@ -34,7 +30,7 @@ class SolrsController < ApplicationController
 
   def update
     solr.update_attributes(params)
-    render :action => "edit"
+    render :nothing => true, :status => :ok
   end
 
   # ajax only

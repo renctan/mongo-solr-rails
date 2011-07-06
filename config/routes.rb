@@ -2,10 +2,8 @@ MongoSolrRails::Application.routes.draw do
   root :to => "mongo_connections#new"
 
   resources :mongo_connections, :only => [:new, :create, :edit]
-  resources :solrs
-
-  controller :solrs do
-    match "auth_db" => :auth_db
+  resources :solrs do
+    post "auth_db"
   end
 
   # The priority is based upon order of creation:

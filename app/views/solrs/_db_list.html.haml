@@ -1,14 +1,28 @@
 -# Partial for database collection selection checkboxes.
+-#
+-# Params:
+-#  - db_set [Hash<String, Enumerable<String> >] a hash for the set of collections to index.
+-#      The key contains the name of the database while the value contains an array of
+-#      collection names.
 
 %ul#db_checkbox_tree
+  - select_all = db_set.empty?
+
   - get_db_list.each do |db_name, coll_set|
     %li.db_entry
       - db_db_name = "db_" + db_name
-      = check_box_tag("databases", db_name)
+      - db_checked = select_all || db_set.has_key?(db_name)
+      = check_box("databases", db_name, :checked => db_checked)
       = label_tag db_name, db_name
+
       %ul
         - coll_set.each do |coll_name|
           %li.coll_entry
-            = check_box(db_db_name, coll_name)
+            - if select_all then
+              - coll_checked = true
+            - else
+              - coll_checked = db_checked ? db_set[db_name].include?(coll_name) : false
+
+            = check_box(db_db_name, coll_name, :checked => coll_checked)
             = label_tag coll_name, coll_name
 

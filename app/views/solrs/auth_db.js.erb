@@ -1,2 +1,3 @@
 $("#login_err_msg").empty();
-$("#database_list").empty().prepend("<%= escape_javascript render(:partial => 'db_list') %>");
+$("#db_checkbox_tree").
+  replaceWith("<%= escape_javascript render('db_list', :db_set => solr.db_set) %>");

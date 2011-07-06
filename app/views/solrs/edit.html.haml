@@ -9,7 +9,7 @@
 #login_form
   =h t("#{local_prefix}.login_info_msg")
   #login_err_msg
-  = form_for(:auth, :url => { :action => "auth_db" }, :remote => true) do |f|
+  = form_for(:auth, :url => solr_auth_db_path(solr), :remote => true) do |f|
     = f.label :database, t("#{local_prefix}.database")
     = f.text_field :database
     = f.label :username, t("#{local_prefix}.username")
@@ -20,8 +20,8 @@
 
 #database_list
   = form_for(:solr, :url => { :action => "update" },
-              :html => { :method => "put" }) do |f|
-    = render :partial => "db_list"
+              :html => { :method => "put" }, :remote => true) do |f|
+    = render "db_list", :db_set => solr.db_set
     = f.submit(t("#{local_prefix}.select"))
 
 %br/
