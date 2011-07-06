@@ -1,0 +1,15 @@
+-# Partial for creating the sync/stop button
+-#
+-# Param
+-#  - solr [Solr] The Solr model to create the button for
+
+- local_prefix = "views.solrs.sync_stop_button"
+
+.sync_stop{ :id => "sync_stop_#{solr.name}" }
+  - if solr.synching? then
+    = button_to(t("#{local_prefix}.stop"), solr_stop_path(solr),
+        :method => :put, :remote => true)
+  - else
+    = button_to(t("#{local_prefix}.sync"), solr_sync_path(solr),
+        :method => :put, :remote => true)
+

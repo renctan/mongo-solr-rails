@@ -7,7 +7,9 @@
   -solrs.each do |name, solr|
     %tr
       %td= link_to(name, edit_solr_path(solr))
-      %td= link_to(t("#{local_prefix}.remove"), solr, :method => :delete)
+      %td= render "sync_stop_button", :solr => solr
+      %td= button_to(t("#{local_prefix}.remove"),
+            { :action => :destroy, :id => solr.name }, :method => :delete)
 
 %br/
 

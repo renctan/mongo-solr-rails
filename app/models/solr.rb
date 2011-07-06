@@ -28,7 +28,8 @@ class Solr
     @solr.get "select", :params =>{ :q => PING_TEST_STRING }
 
     @conn = mongo
-    @synchronizer = MongoSolr::SolrSynchronizer.new(@solr, @conn, mode, db_name_set)
+    @synchronizer = MongoSolr::SolrSynchronizer.new(@solr, @conn,
+                                                    mode, db_name_set, { :name => @name })
 
     @sync_thread_mutex = Mutex.new
 
@@ -70,6 +71,11 @@ class Solr
 
   def update_attributes(param)
     @synchronizer.update_db_set(extract_db_set(param))
+  end
+
+  # @return [Boolean] true if this object is performing a synchronization with Solr.
+  def synching?
+    @sync_thread_mutex.synchronize { not @sync_thread.nil? }
   end
 
   ##############################################################################

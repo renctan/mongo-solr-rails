@@ -3,7 +3,9 @@ MongoSolrRails::Application.routes.draw do
 
   resources :mongo_connections, :only => [:new, :create, :edit]
   resources :solrs do
-    post "auth_db"
+    put "auth_db" # actually nested with mongo_connections
+    put "sync"
+    put "stop"
   end
 
   # The priority is based upon order of creation:

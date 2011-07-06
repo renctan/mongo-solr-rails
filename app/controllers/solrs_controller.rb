@@ -47,5 +47,15 @@ class SolrsController < ApplicationController
       render "auth_err.js.erb"
     end
   end
+
+  # ajax only
+  def sync
+    solr.sync
+  end
+
+  # ajax only
+  def stop
+    solr.stop_sync
+  end
 end
 

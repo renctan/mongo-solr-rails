@@ -1,0 +1,2 @@
+$("#<%= 'sync_stop_' + solr.name %>").
+  replaceWith("<%= escape_javascript render('sync_stop_button', :solr => solr) %>")
