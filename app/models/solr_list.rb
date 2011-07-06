@@ -7,7 +7,7 @@ class SolrList
   include Singleton
   extend Forwardable
 
-  def_delegators :@list, :[], :empty?, :each, :delete
+  def_delegators :@list, :[], :empty?, :each
 
   def initialize
     @list = MongoSolr::SynchronizedHash.new
@@ -42,6 +42,20 @@ class SolrList
     end
 
     return err_msg
+  end
+
+  # Removes a Solr connection from the list.
+  #
+  # @param name [String] The name of the Solr connection.
+  def delete(name)
+    @list.use do |list|
+      solr = list[name]
+
+      unless solr.nil? then
+        solr.stop_sync
+        list.delete(name)
+      end
+    end
   end
 
   private

@@ -44,8 +44,6 @@ class Solr
     @sync_thread_mutex.synchronize do
       if @sync_thread.nil? then
         @sync_thread = Thread.new { @synchronizer.sync() }
-      else
-        raise "sync_thread for #{@name} already running!"
       end
     end
   end
